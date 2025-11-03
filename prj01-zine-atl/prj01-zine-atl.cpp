@@ -27,5 +27,5 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 
   _Module.Term();
 
-  return msg.wParam;
+  return static_cast<int>(msg.wParam);
 }
