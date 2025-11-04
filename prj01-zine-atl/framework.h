@@ -17,5 +17,11 @@
 // added
 #include <atlbase.h>
 
+/*
+* まず、ATLを使用するためのヘッダをインクルードしますが、
+* CComModuleクラスのインスタンスである _ModuleはATLの各ヘッダから参照されるので
+* グローバルに宣言しておきます。
+* この_Moduleは、_tWinMain()の最初と最後で初期化と後始末をしています。
+*/
 extern CComModule _Module;
 #include <atlwin.h>
