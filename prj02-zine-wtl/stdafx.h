@@ -16,6 +16,10 @@
 
 extern CAppModule _Module;
 
+/*
+* WTLのメッセージマップを利用するにはこの「atlcrack.h」をインクルードし、
+* メッセージマップのBEGIN_MSG_MAPをBEGIN_MSG_MAP_EXに変更する必要があります。
+*/
 #include <atlwin.h>
 #include <atlcrack.h> // WTLメッセージクラッカーを使うため
 #include <atlmisc.h>
@@ -29,3 +33,4 @@ extern CAppModule _Module;
 #else
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
+

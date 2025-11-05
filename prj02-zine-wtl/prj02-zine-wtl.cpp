@@ -13,8 +13,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 
   // 独自ウィンドウを作成
   CMyWindow wnd;
-  wnd.Create(NULL, CWindow::rcDefault,
-    _T("Hello, ATL/WTL"), WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+  wnd.Create(NULL, CWindow::rcDefault, _T("Hello, ATL/WTL"), WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 
   int nRet = theLoop.Run();
 
