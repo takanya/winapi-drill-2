@@ -1,55 +1,26 @@
-// prj02-zine-wtl.cpp : main source file for prj02-zine-wtl.exe
-//
-
 #include "stdafx.h"
 
-#include <atlframe.h>
-#include <atlctrls.h>
-#include <atldlgs.h>
+#include "prj02-zine-wtl.h"
 
-#include "resource.h"
+CAppModule _Module;  // CComModuleからCAppModuleに置き換える
 
-#include "View.h"
-#include "aboutdlg.h"
-#include "MainFrm.h"
-
-CAppModule _Module;
-
-int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
+int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdShow)
 {
-	CMessageLoop theLoop;
-	_Module.AddMessageLoop(&theLoop);
+  _Module.Init(NULL, hInstance);
 
-	CMainFrame wndMain;
+  CMessageLoop theLoop;
+  _Module.AddMessageLoop(&theLoop);
 
-	if(wndMain.CreateEx() == NULL)
-	{
-		ATLTRACE(_T("Main window creation failed!\n"));
-		return 0;
-	}
+  // 独自ウィンドウを作成
+  CMyWindow wnd;
+  wnd.Create(NULL, CWindow::rcDefault,
+    _T("Hello, ATL/WTL"), WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 
-	wndMain.ShowWindow(nCmdShow);
+  int nRet = theLoop.Run();
 
-	int nRet = theLoop.Run();
+  _Module.RemoveMessageLoop();
 
-	_Module.RemoveMessageLoop();
-	return nRet;
-}
+  _Module.Term();
 
-int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
-{
-	HRESULT hRes = ::CoInitialize(NULL);
-	ATLASSERT(SUCCEEDED(hRes));
-
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
-
-	hRes = _Module.Init(NULL, hInstance);
-	ATLASSERT(SUCCEEDED(hRes));
-
-	int nRet = Run(lpstrCmdLine, nCmdShow);
-
-	_Module.Term();
-	::CoUninitialize();
-
-	return nRet;
+  return nRet;
 }
