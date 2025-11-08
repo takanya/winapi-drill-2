@@ -1,3 +1,8 @@
+/*
+ウィンドウを作成するためにはATLのCWindowImplクラスを使用しましたが、
+ダイアログを作成するためにはATLのCDialogImplクラスを使用します。
+CMainDlgクラス内でWM_INITDIALOGと各ボタンメッセージへの応答を定義しています。
+*/
 class CMainDlg : public CDialogImpl<CMainDlg>
 {
 public:
