@@ -13,11 +13,31 @@
 
 CAppModule _Module;
 
+/*
+　モードレスダイアログとモーダルダイアログでは、主に以下の点が異なります。
+
+ダイアログの作成
+　モーダルダイアログでは_tWinMain()内でDoModal()を呼び出しましたが、
+  モードレスダイアログはCreate()を呼び出して作成します。
+
+メッセージループの管理
+　モードレスダイアログでは、メッセージループをCMessageLoopクラスで管理できるため、
+  CMessageFilterクラスやCIdleHandlerクラスを使ってメッセージフィルタやアイドルハンドラを利用できます。
+	今回の例ではCMainDlgクラスの基底クラスにCMessageFilterクラスやCIdleHandlerクラスを追加し、
+	CMainDlgクラス内でメッセージフィルタハンドラ関数（PreTranslateMessage）と
+	アイドルハンドラ関数（OnIdle）を定義しています。
+
+ダイアログの閉じ方
+　モーダルダイアログでは、［OK］ボタンハンドラと［キャンセル］ボタンハンドラで
+  EndDialog()を呼び出しましたが、モードレスダイアログはDestroyWindow()と
+	 ::PostQuitMessage()を呼び出して閉じます。
+*/
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
+	// モードレスダイアログ表示
 	CMainDlg dlgMain;
 
 	if(dlgMain.Create(NULL) == NULL)
