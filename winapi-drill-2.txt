@@ -1,0 +1,20 @@
+# ATL/WTLプログラミング 1：ATL/WTLの概要と基本 (1/2)|CodeZine（コードジン）
+https://codezine.jp/article/detail/178
+# ATL/WTLプログラミング 2：ダイアログとコントロール|CodeZine（コードジン）
+https://codezine.jp/article/detail/201
+# ATL/WTLプログラミング 3：フレームウィンドウとビュー|CodeZine（コードジン）
+https://codezine.jp/article/detail/223
+# ATL/WTLプログラミング 4：ダイアログリサイズ (1/2)|CodeZine（コードジン）
+https://codezine.jp/article/detail/262
+# ATL/WTLプログラミング 5：スプリッタウィンドウ (1/3)|CodeZine（コードジン）
+https://codezine.jp/article/detail/346
+# ATL/WTLプログラミング 6：ズームスクロールウィンドウ (1/3)|CodeZine（コードジン）
+https://codezine.jp/article/detail/392
+
+
+# allenk/WTL-Wizard-VS2022: WTL (Windows Template for Visual Studio 2022)
+https://github.com/allenk/WTL-Wizard-VS2022
+これでウィザード出た！
+内部の方のインクルールディレクトリに
+C:\dev\cpp\wtl\include
+を追加したら、リソースエディタも使ええた！
