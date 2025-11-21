@@ -3,22 +3,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-/*
-モードレスダイアログを作成する場合も、モーダルダイアログと同様にCDialogImplクラスを使用します。
-*/
+
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 		public CMessageFilter, public CIdleHandler
 {
 public:
 	enum { IDD = IDD_MAINDLG };
 
-	// メッセージフィルタ処理
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
 	{
 		return CWindow::IsDialogMessage(pMsg);
 	}
 
-	// アイドル処理
 	virtual BOOL OnIdle()
 	{
 		UIUpdateChildWindows();
@@ -31,6 +27,7 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
 	END_MSG_MAP()
@@ -51,7 +48,6 @@ public:
 		HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
 		SetIcon(hIconSmall, FALSE);
 
-		// メッセージループにメッセージフィルタとアイドルハンドラを追加
 		// register object for message filtering and idle updates
 		CMessageLoop* pLoop = _Module.GetMessageLoop();
 		ATLASSERT(pLoop != NULL);
@@ -71,6 +67,14 @@ public:
 		pLoop->RemoveMessageFilter(this);
 		pLoop->RemoveIdleHandler(this);
 
+		return 0;
+	}
+
+	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		OutputDebugString(L"ここにログメッセージを書きますーー\n"); 
+		CAboutDlg dlg;
+		dlg.DoModal();
 		return 0;
 	}
 

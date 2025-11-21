@@ -18,3 +18,13 @@ https://github.com/allenk/WTL-Wizard-VS2022
 内部の方のインクルールディレクトリに
 C:\dev\cpp\wtl\include
 を追加したら、リソースエディタも使ええた！
+
+■ prj05-zine-color
+とりあえず、以下の感じでstdafx.hに追加すれば、普通に起動はするひな型を作れる
+// Include additional headers your program requires here
+// C:\dev\cpp\wtl\include
+#include <atlcrack.h> // WTLメッセージクラッカーを使うため
+#include <atlmisc.h>
+#include <atlctrls.h>  // コントロール用クラスを使用するため
+
+あとは、1機能づつ足していくか？
