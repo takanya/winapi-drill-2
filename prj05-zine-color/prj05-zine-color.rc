@@ -45,14 +45,19 @@ BEGIN
     GROUPBOX        "",IDC_STATIC,7,7,115,88
 END
 
-IDD_MAINDLG DIALOG 0, 0, 187, 98
+IDD_MAINDLG DIALOGEX 0, 0, 187, 98
 STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
 CAPTION "prj05-zine-color"
-FONT 9, "Segoe UI"
+FONT 9, "Segoe UI", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,130,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,130,24,50,14
     PUSHBUTTON      "&About",ID_APP_ABOUT,130,77,50,14
+    PUSHBUTTON      "spuit",IDC_BTN_SPUIT,7,7,50,14
+    LTEXT           "スタティック",IDC_STATIC_COLOR,14,29,31,8
+    EDITTEXT        IDC_EDIT_COLOR,7,42,46,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "copy",IDC_BTN_COPY,7,63,50,14
+    CONTROL         "topmost",IDC_CHK_TOPMOST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,81,42,10
 END
 
 
@@ -118,6 +123,17 @@ BEGIN
     BEGIN
         VALUE "Translation", 0x409, 1200
     END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_MAINDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
 #endif    // 日本語 (ニュートラル) resources

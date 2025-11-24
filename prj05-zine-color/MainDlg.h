@@ -32,6 +32,9 @@ public:
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		COMMAND_HANDLER(IDC_BTN_SPUIT, BN_CLICKED, OnBnClickedBtnSpuit)
+		COMMAND_HANDLER(IDC_BTN_COPY, BN_CLICKED, OnBnClickedBtnCopy)
+		COMMAND_HANDLER(IDC_CHK_TOPMOST, BN_CLICKED, OnBnClickedChkTopmost)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -112,4 +115,26 @@ public:
     bHandled = FALSE;
 		return 0;
 	}
+
+	LRESULT CMainDlg::OnBnClickedBtnSpuit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		// TODO: ここにコントロール通知ハンドラー コードを追加します。
+
+		return 0;
+	}
+
+	LRESULT CMainDlg::OnBnClickedBtnCopy(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		// TODO: ここにコントロール通知ハンドラー コードを追加します。
+
+		return 0;
+	}
+
+	LRESULT CMainDlg::OnBnClickedChkTopmost(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		// TODO: ここにコントロール通知ハンドラー コードを追加します。
+
+		return 0;
+	}
+
 };
