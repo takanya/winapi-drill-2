@@ -30,6 +30,8 @@ public:
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -95,5 +97,19 @@ public:
 	{
 		DestroyWindow();
 		::PostQuitMessage(nVal);
+	}
+
+	LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+	{
+		// TODO: ここにメッセージ ハンドラー コードを追加するか、既定の処理を呼び出します。
+
+		return 0;
+	}
+
+	LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+	{
+		// TODO: ここにメッセージ ハンドラー コードを追加するか、既定の処理を呼び出します。
+    bHandled = FALSE;
+		return 0;
 	}
 };
