@@ -3,7 +3,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-
+/*
+WTLには基本的なウィンドウの機能を持つCFrameWindowImplが用意されています。
+CFrameWindowImpl（または、その基底クラスであるCFrameWindowImplBase）クラスには、
+WM_DESTROYメッセージ用のデフォルトのハンドラが用意されている他、
+ウィンドウサイズが変更されたときに自動的にレイアウトを調整するWM_SIZEメッセージハンドラ、
+ツールバーやステータスバーを作成する関数、
+キーボードアクセラレータ用のコードやツールチップ用のメッセージハンドラなどが備えられています。
+また、メニューバーなどのリソースを簡単に設定するマクロをサポートしています
+*/
 class CMainFrame : 
 	public CFrameWindowImpl<CMainFrame>, 
 	public CUpdateUI<CMainFrame>,
@@ -15,6 +23,11 @@ public:
 	DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
 	// メッセージフィルタ処理
+	/*
+	メッセージフィルタでCFrameWindowImplのメンバ関数であるPreTranslateMessage()を呼び出します。
+	この関数ではキーボードアクセラレータ用に::TranslateAccelerator()を呼び出していますが、
+	今回はキーボードアクセラレータを使用しないのであまり関係ありません。
+	*/
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
 	{
     // 基底クラスの PreTranslateMessage を呼び出す
@@ -34,6 +47,16 @@ public:
 	END_UPDATE_UI_MAP()
 
   // メッセージマップ
+	/*
+  チェーンとは、あるメッセージマップを別のメッセージマップに繋ぐ仕組みです。
+	今回の例ではCHAIN_MSG_MAP()マクロで基底クラスのメッセージマップに繋いでいます。
+	こうすることにより、派生クラスでメッセージハンドラが見つからない場合は、
+	基底クラスのメッセージマップを検索するようになります。
+	CFrameWindowImplはWM_DESTROYメッセージハンドラを用意しており、
+	最終的に::PostQuitMessage()を呼び出すようになっています。
+	チェーンを利用することによって、CMainFrameクラスでWM_DESTROYメッセージを処理しなくとも、
+	CFrameWindowImplのWM_DESTROYメッセージハンドラに処理を任せることができます。
+ */
 	BEGIN_MSG_MAP(CMainFrame)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -57,9 +80,45 @@ public:
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		// ツールバーを作成
+		/*
+	  フレームウィンドウにツールバーを追加するにはCreateSimpleToolBar()を呼び出します。
+		CreateSimpleToolBar()には3つの引数を渡すことができます。
+		第1引数にはツールバーリソースIDを指定します。
+		デフォルト引数は0で、この場合は共通リソースID（今回の例ではIDR_MAINFRAME）が使用されます。
+		第2引数にはツールバーのスタイルを指定します。
+		デフォルト引数はATL_SIMPLE_TOOLBAR_STYLEで、これは「atlframe.h」ヘッダで次のように定義されています。
+    ATL_SIMPLE_TOOLBAR_STYLE定義
+    #define ATL_SIMPLE_TOOLBAR_STYLE \
+      (WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS)
+　  第3引数には識別子を指定します。デフォルト引数はATL_IDW_TOOLBARです。
+　  CreateSimpleToolBar()は、内部でCreateSimpleToolBarCtrl()というメンバ関数を呼び出しており、
+	  その呼び出しによって得られたツールバーのハンドルを、
+		CFrameWindowImplの基底クラスであるCFrameWindowImplBaseクラスのm_hWndToolBarというHWND型の
+		メンバ変数に代入します。
+		*/
 		CreateSimpleToolBar();
 
 		// ステータスバーを作成
+		/*
+		フレームウィンドウにステータスバーを追加するにはCreateSimpleStatusBar()を呼び出します。
+		CreateSimpleStatusBar()には2つバージョンがあります。
+		両方とも3つの引数を指定できますが、一方は、第1引数にアイドル時に表示する文字列を指定するもので、
+		他方は、第1引数にアイドル時に表示する文字列リソースのIDを指定するものです。
+		後者はすべての引数を省略可能です。
+		今回はすべての引数を省略したので後者が使用されます。
+		この場合、第1引数にはデフォルト引数としてATL_IDS_IDLEMESSAGEが指定されます。
+		文字列リソースでATL_IDS_IDLEMESSAGEに文字列を割り当てると、
+		アイドル時にその文字列がステータスバーに表示されます。
+		両バージョンとも第2引数はステータスバーのスタイルです。
+		デフォルト引数は次のスタイルです。
+		ステータスバーのデフォルトスタイル
+		WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SBARS_SIZEGRIP
+　	両バージョンとも第3引数は識別子です。デフォルト引数はATL_IDW_STATUS_BARです。
+　	どちらのバージョンのCreateSimpleStatusBar()も、結果的に内部で::CreateStatusWindow()を呼び出しており、
+		その呼び出しによって得られたステータスバーのハンドルを、
+		CFrameWindowImplの基底クラスであるCFrameWindowImplBaseクラスのm_hWndStatusBarという
+		HWND型のメンバ変数に代入します。
+		*/
 		CreateSimpleStatusBar();
 
 		UIAddToolBar(m_hWndToolBar);

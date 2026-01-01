@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 
-#include <atlframe.h>
+#include <atlframe.h> // CFrameWindowImplクラスを使用するため
 #include <atlctrls.h>
 #include <atldlgs.h>
 
