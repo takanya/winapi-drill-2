@@ -4,6 +4,25 @@
 
 #pragma once
 
+/*
+フレームウィンドウであるCMainFrameクラス内では、
+ビューウィンドウであるCFontViewクラスのインスタンスをメンバ変数として宣言します。
+OnCreate()ではこのビューウィンドウを作成し、CFrameWindowImplの基底クラスである
+CFrameWindowImplBaseクラスのm_hWndClientというHWND型のメンバ変数に代入します。
+
+CFrameWindowImplにはWM_SIZEメッセージハンドラが用意されています。
+このため、メインウィンドウのサイズを変更したときのWM_SIZEメッセージがチェーン先の
+CFrameWindowImplクラスに送られると、CFrameWindowImplクラスのWM_SIZEメッセージハンドラが
+呼び出されます。
+このハンドラではUpdateLayout()という関数を呼び出しており、
+この関数はm_hWndToolBarで識別されるツールバーやm_hWndStatusBarで識別されるステータスバー、
+m_hWndClientで識別されるビューウィンドウを自動的にフレームウィンドウのサイズに合わせます。
+
+また、CMainFrameクラスのメッセージフィルタでは、
+CFontViewクラスの独自メッセージフィルタ関数を呼び出しています。
+これにより、ビューウィンドウにもメッセージフィルタリングの機会を与えています。
+ */
+
 class CMainFrame : 
 	public CFrameWindowImpl<CMainFrame>, 
 	public CUpdateUI<CMainFrame>,
@@ -14,6 +33,7 @@ public:
 
 	CFontView m_view;
 
+	// メッセージフィルタ処理
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
 	{
 		if(CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))
@@ -22,6 +42,7 @@ public:
 		return m_view.PreTranslateMessage(pMsg);
 	}
 
+	// アイドル処理
 	virtual BOOL OnIdle()
 	{
 		UIUpdateToolBar();
@@ -50,13 +71,20 @@ public:
 //	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
+	void OnFontChange() {
+		// フォント名リスト更新
+		m_view.FillList();
+	}
+
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		CreateSimpleToolBar();
 
 		CreateSimpleStatusBar();
 
-		m_hWndClient = m_view.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | LVS_REPORT | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+		m_hWndClient = m_view.Create(m_hWnd, rcDefault, NULL, 
+			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | LVS_REPORT | LVS_SHOWSELALWAYS, 
+			WS_EX_CLIENTEDGE);
 
 		UIAddToolBar(m_hWndToolBar);
 		UISetCheck(ID_VIEW_TOOLBAR, 1);
@@ -81,6 +109,17 @@ public:
 
 		bHandled = FALSE;
 		return 1;
+	}
+
+	void OnButtonAddfont(UINT uNotifyCode, int nID, HWND hWndCtl) {
+		CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_CREATEPROMPT,
+			_T("TrueTypeフォントファイル (*.ttf)\0*.ttf\0すべてのファイル (*.*)\0*.*\0\0"));
+
+		if (dlg.DoModal() == IDOK) {
+			// システムに一時的にフォント追加
+			AddFontResource(dlg.m_szFileName);
+			::SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+		}
 	}
 
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
