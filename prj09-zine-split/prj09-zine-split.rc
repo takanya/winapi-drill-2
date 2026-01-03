@@ -1,0 +1,213 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE
+BEGIN
+POPUP "ファイル(&F)"
+BEGIN
+MENUITEM "アプリケーションの終了(&X)", ID_APP_EXIT
+END
+POPUP "表示(&V)"
+BEGIN
+MENUITEM "ビュー切り換え(&C)", ID_MENUITEM_CHANGEVIEW
+END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+BUTTON      ID_MENUITEM_CHANGEVIEW
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\prj09-zine-split.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG  0, 0, 187, 102
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 9, "Segoe UI"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,81,50,14
+    CTEXT           "prj09-zine-split Application v1.0\n\n(c) Copyright 2026",IDC_STATIC,25,57,78,
+                    32
+    ICON            IDR_MAINFRAME,IDC_STATIC,55,26,18,20
+    GROUPBOX        "",IDC_STATIC,7,7,115,88
+END
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 95
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "prj09-zine-split Module\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "prj09-zine-split\0"
+            VALUE "LegalCopyright", "Copyright 2026\0"
+            VALUE "OriginalFilename", "prj09-zine-split.exe\0"
+            VALUE "ProductName", "prj09-zine-split Module\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04B0
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE
+BEGIN
+IDR_MAINFRAME           "proj05"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+ID_APP_EXIT             "アプリケーションを終了します。\nアプリケーションの終了"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+ATL_IDS_SCSIZE          "このウィンドウのサイズを変更します。"
+ATL_IDS_SCMOVE          "このウィンドウを画面の別の位置に移動します。"
+ATL_IDS_SCMINIMIZE      "このウィンドウを最小化します。"
+ATL_IDS_SCMAXIMIZE      "このウィンドウを画面いっぱいに拡大します。"
+ATL_IDS_SCCLOSE         "このウィンドウを閉じます。"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+ATL_IDS_SCRESTORE       "このウィンドウを通常の大きさに戻します。"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+ATL_IDS_IDLEMESSAGE     "レディ"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+ID_MENUITEM_CHANGEVIEW  "フォントリストビューの表示/非表示を切り換えます。\nビュー切り換え"
+END
+
+#endif    // 日本語 resources
+
+
+#ifndef APSTUDIO_INVOKED
+#endif    // not APSTUDIO_INVOKED
