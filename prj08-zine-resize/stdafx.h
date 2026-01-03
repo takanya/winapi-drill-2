@@ -18,6 +18,13 @@ extern CAppModule _Module;
 
 #include <atlwin.h>
 
+#include <atlcrack.h>
+#include <atlmisc.h>
+
+#include <atlctrls.h>
+#include <atlctrlx.h>  // CSortListViewCtrlを使用するため
+#include <atlframe.h>  // CDialogResizeを使用するため
+
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64

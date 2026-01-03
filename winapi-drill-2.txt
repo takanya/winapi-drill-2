@@ -31,3 +31,10 @@ C:\dev\cpp\wtl\include
 #include <atlctrls.h>  // コントロール用クラスを使用するため
 
 あとは、1機能づつ足していくか？
+
+日本語リソースの指定方法
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32

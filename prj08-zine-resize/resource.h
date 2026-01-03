@@ -9,6 +9,14 @@
 //#define IDR_PRJ08ZINERESIZETYPE	129
 #define IDD_MAINDLG				129
 
+#define IDC_LIST_WINDOW                 1000
+#define IDC_EDIT_WIDTH                  1001
+#define IDC_EDIT_HEIGHT                 1002
+#define IDC_STATIC_WIDTH                1003
+#define IDC_STATIC_HEIGHT               1004
+#define IDC_BUTTON_APPLY                1005
+#define IDC_BUTTON_UPDATE               1006
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
