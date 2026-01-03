@@ -24,6 +24,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prj07-zine-view", "prj07-zi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prj08-zine-resize", "prj08-zine-resize\prj08-zine-resize.vcxproj", "{45235EC6-A3B5-420B-08F3-A0F11FC6EB26}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prj09-zine-split", "prj09-zine-split\prj09-zine-split.vcxproj", "{94DC11D1-3A24-A678-7B32-710F8401B490}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prj10-zine-zoom", "prj10-zine-zoom\prj10-zine-zoom.vcxproj", "{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -96,6 +100,22 @@ Global
 		{45235EC6-A3B5-420B-08F3-A0F11FC6EB26}.Release|x64.Build.0 = Release|x64
 		{45235EC6-A3B5-420B-08F3-A0F11FC6EB26}.Release|x86.ActiveCfg = Release|Win32
 		{45235EC6-A3B5-420B-08F3-A0F11FC6EB26}.Release|x86.Build.0 = Release|Win32
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Debug|x64.ActiveCfg = Debug|x64
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Debug|x64.Build.0 = Debug|x64
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Debug|x86.ActiveCfg = Debug|Win32
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Debug|x86.Build.0 = Debug|Win32
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Release|x64.ActiveCfg = Release|x64
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Release|x64.Build.0 = Release|x64
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Release|x86.ActiveCfg = Release|Win32
+		{94DC11D1-3A24-A678-7B32-710F8401B490}.Release|x86.Build.0 = Release|Win32
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Debug|x64.ActiveCfg = Debug|x64
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Debug|x64.Build.0 = Debug|x64
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Debug|x86.ActiveCfg = Debug|Win32
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Debug|x86.Build.0 = Debug|Win32
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Release|x64.ActiveCfg = Release|x64
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Release|x64.Build.0 = Release|x64
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Release|x86.ActiveCfg = Release|Win32
+		{1BB58FC8-F67E-41DF-3AE8-9FFCB70ACDBD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

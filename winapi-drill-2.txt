@@ -11,8 +11,13 @@ https://codezine.jp/article/detail/262
   prj08-zine-resize
 # ATL/WTLプログラミング 5：スプリッタウィンドウ (1/3)|CodeZine（コードジン）
 https://codezine.jp/article/detail/346
+  prj09-zine-splitter
+  ビルドは通るが、実行時にエラーがでる、まじめに追っていかないと無理。
+  とりあえず、サイトの内容をコードにコメントとして転記したい。
 # ATL/WTLプログラミング 6：ズームスクロールウィンドウ (1/3)|CodeZine（コードジン）
 https://codezine.jp/article/detail/392
+  prj10-zine-zoom
+  と思ったら、関係ありそう
 
 
 # allenk/WTL-Wizard-VS2022: WTL (Windows Template for Visual Studio 2022)
