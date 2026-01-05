@@ -4,19 +4,21 @@
 
 #pragma once
 
+#include "resource.h"
+
 class CMainFrame : 
-	public CFrameWindowImpl<CMainFrame>, 
-	public CUpdateUI<CMainFrame>,
+	public CFrameWindowImpl<CMainFrame>, public CUpdateUI<CMainFrame>,
 	public CMessageFilter, public CIdleHandler
 {
 public:
 	DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
 	CSplitterWindow  m_wndSplitter;      // スプリッタウィンドウ
+	CPaneContainer m_painContainer;      // ペインコンテナ
 	CFontListView m_viewFontList;        // 左ペイン
 	CFontPreviewView m_viewFontPreview;  // 右ペイン
 
-	CCommandBarCtrl m_CmdBar;            // コマンドバー
+	//CCommandBarCtrl m_CmdBar;            // コマンドバー
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
 	{
@@ -37,8 +39,7 @@ public:
 		UIUpdateStatusBar();
 
 		CString strCount;
-		strCount.Format(_T("フォント数:%d"),
-			m_viewFontList.GetCount());
+		strCount.Format(_T("フォント数:%d"), m_viewFontList.GetCount());
 		CStatusBarCtrl bar = m_hWndStatusBar;
 		bar.SetText(1, strCount);
 
@@ -46,6 +47,7 @@ public:
 	}
 
 	BEGIN_UPDATE_UI_MAP(CMainFrame)
+		UPDATE_ELEMENT(ID_MENUITEM_CHANGEVIEW, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
 		UPDATE_ELEMENT(ID_VIEW_TOOLBAR, UPDUI_MENUPOPUP)
 		UPDATE_ELEMENT(ID_VIEW_STATUS_BAR, UPDUI_MENUPOPUP)
 	END_UPDATE_UI_MAP()
@@ -70,32 +72,32 @@ public:
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		// create command bar window
-		HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
+		//HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
 		// attach menu
-		m_CmdBar.AttachMenu(GetMenu());
+		//m_CmdBar.AttachMenu(GetMenu());
 		// load command bar images
-		m_CmdBar.LoadImages(IDR_MAINFRAME);
+		//m_CmdBar.LoadImages(IDR_MAINFRAME);
 		// remove old menu
-		SetMenu(NULL);
+		//SetMenu(NULL);
 
 		// ツールバーを作成
-		HWND hWndToolBar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE);
+		//HWND hWndToolBar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE);
 
 		// リバーを作成
-		CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
+		//CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 		// リバーのバンドにコマンドバーとツールバーを追加
-		AddSimpleReBarBand(hWndCmdBar);
-		AddSimpleReBarBand(hWndToolBar, NULL, TRUE);
+		//AddSimpleReBarBand(hWndCmdBar);
+		//AddSimpleReBarBand(hWndToolBar, NULL, TRUE);
 
 		// ステータスバーを作成
-		CreateSimpleStatusBar();
+		//CreateSimpleStatusBar();
 
-		UIAddToolBar(hWndToolBar);
-		UISetCheck(ID_VIEW_TOOLBAR, 1);
-		UISetCheck(ID_VIEW_STATUS_BAR, 1);
+		//UIAddToolBar(hWndToolBar);
+	  //UISetCheck(ID_VIEW_TOOLBAR, 1);
+		//UISetCheck(ID_VIEW_STATUS_BAR, 1);
 
-		UIAddStatusBar(m_hWndStatusBar);
-		UISetCheck(ID_MENUITEM_CHANGEVIEW, 1);
+		//UIAddStatusBar(m_hWndStatusBar);
+		//UISetCheck(ID_MENUITEM_CHANGEVIEW, 1);
 
 		// スプリッタウィンドウを作成
 		m_wndSplitter.Create(m_hWnd, rcDefault, NULL,	WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
@@ -103,25 +105,22 @@ public:
 		// スプリッタウィンドウ拡張スタイルを設定
 		m_wndSplitter.SetSplitterExtendedStyle(0);
 
+		// ペインコンテナを作成
+		m_painContainer.Create(m_wndSplitter, _T("フォント名"));
+
 		// 左ペインのビューウィンドウを作成
 		m_viewFontList.Create(m_wndSplitter, rcDefault, NULL,
 			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VSCROLL | 
 			LBS_NOINTEGRALHEIGHT | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | LBS_SORT, WS_EX_CLIENTEDGE);
 
+		m_painContainer.SetClient(m_viewFontList);
 		m_wndSplitter.SetSplitterPane(SPLIT_PANE_LEFT, m_viewFontList);
+		
+				// 右ペインのビューウィンドウを作成
+		m_viewFontPreview.Create(m_wndSplitter, rcDefault, NULL,
+			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
 
-		// スプリッタウィンドウを作成
-		m_wndSplitter.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-
-		// スプリッタウィンドウ拡張スタイルを設定
-		m_wndSplitter.SetSplitterExtendedStyle(0);
-
-		// 左ペインのビューウィンドウを作成
-		m_viewFontList.Create(m_wndSplitter, rcDefault, NULL,
-			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VSCROLL | LBS_NOINTEGRALHEIGHT |
-			LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | LBS_SORT, WS_EX_CLIENTEDGE);
-
-		m_wndSplitter.SetSplitterPane(SPLIT_PANE_LEFT, m_viewFontList);
+		m_wndSplitter.SetSplitterPane(SPLIT_PANE_RIGHT, m_viewFontPreview);
 
 		m_hWndClient = m_wndSplitter;
 		UpdateLayout();

@@ -22,8 +22,10 @@ extern CAppModule _Module;
 #include <atlmisc.h>
 #include <atlctrls.h>
 #include <atlctrlw.h> // コマンドバーを使用するため
-#include <atlframe.h>
+#include <atlframe.h> // CFrameWindowImplを使うため
 #include <atlsplit.h>  // スプリッタウィンドウを使用するため
+#include <atlctrlx.h>  // CSortListViewCtrl、CPaneContainer、CMultiPaneStatusBarCtrlを使用するため
+#include <atlscrl.h>
 
 
 #if defined _M_IX86
