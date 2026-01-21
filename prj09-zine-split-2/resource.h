@@ -6,6 +6,7 @@
 
 #define IDD_ABOUTBOX				100
 #define IDR_MAINFRAME				128
+#define ID_MENUITEM_CHANGEVIEW          32773
 //#define IDR_PRJ09ZINESPLIT2TYPE	129
 
 // Next default values for new objects

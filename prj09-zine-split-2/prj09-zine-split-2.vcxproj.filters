@@ -51,5 +51,8 @@
     <Image Include="res\prj09-zine-split-2.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\_inbox\proj05_src\proj05\res\mainfram.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
