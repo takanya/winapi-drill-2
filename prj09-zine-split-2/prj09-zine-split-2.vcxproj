@@ -206,11 +206,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="FontListView.h" />
+    <ClInclude Include="FontPreviewView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="prj09-zine-split-2.rc" />

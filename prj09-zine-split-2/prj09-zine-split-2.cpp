@@ -3,15 +3,10 @@
 
 #include "stdafx.h"
 
-#include <atlframe.h>
-#include <atlctrls.h>
-#include <atldlgs.h>
-#include <atlctrlw.h>
-
 #include "resource.h"
 
-#include "View.h"
-#include "aboutdlg.h"
+#include "FontListView.h"
+#include "FontPreviewView.h"
 #include "MainFrm.h"
 
 CAppModule _Module;

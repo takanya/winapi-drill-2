@@ -4,137 +4,168 @@
 
 #pragma once
 
-class CMainFrame : 
-	public CFrameWindowImpl<CMainFrame>, 
-	public CUpdateUI<CMainFrame>,
-	public CMessageFilter, public CIdleHandler
+class CMainFrame : public CFrameWindowImpl<CMainFrame>, public CUpdateUI<CMainFrame>,
+  public CMessageFilter, public CIdleHandler
 {
 public:
-	DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
+  DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
-	CView m_view;
-	CCommandBarCtrl m_CmdBar;
+  CSplitterWindow  m_wndSplitter;      // スプリッタウィンドウ
+  CFontListView m_viewFontList;        // 左ペイン
+  CFontPreviewView m_viewFontPreview;  // 右ペイン
 
-	virtual BOOL PreTranslateMessage(MSG* pMsg)
-	{
-		if(CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))
-			return TRUE;
+  CCommandBarCtrl m_CmdBar;
 
-		return m_view.PreTranslateMessage(pMsg);
-	}
+  virtual BOOL PreTranslateMessage(MSG* pMsg) {
+    if (CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))
+      return TRUE;
 
-	virtual BOOL OnIdle()
-	{
-		UIUpdateToolBar();
-		return FALSE;
-	}
+    // 左ペインのPreTranslateMessageを呼び出す
+    if (m_viewFontList.PreTranslateMessage(pMsg))
+      return TRUE;
 
-	BEGIN_UPDATE_UI_MAP(CMainFrame)
-		UPDATE_ELEMENT(ID_VIEW_TOOLBAR, UPDUI_MENUPOPUP)
-		UPDATE_ELEMENT(ID_VIEW_STATUS_BAR, UPDUI_MENUPOPUP)
-	END_UPDATE_UI_MAP()
+    // 右ペインのPreTranslateMessageを呼び出す
+    return m_viewFontPreview.PreTranslateMessage(pMsg);
+  }
 
-	BEGIN_MSG_MAP(CMainFrame)
-		MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
-		COMMAND_ID_HANDLER(ID_FILE_NEW, OnFileNew)
-		COMMAND_ID_HANDLER(ID_VIEW_TOOLBAR, OnViewToolBar)
-		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
-		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
-		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
-		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
-	END_MSG_MAP()
+  virtual BOOL OnIdle() {
+    UIUpdateToolBar();
+    UIUpdateStatusBar();
 
-// Handler prototypes (uncomment arguments if needed):
-//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-//	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
+    CString strCount;
+    strCount.Format(_T("フォント数:%d"), m_viewFontList.GetCount());
+    CStatusBarCtrl bar = m_hWndStatusBar;
+    bar.SetText(1, strCount);
 
-	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-	{
-		// create command bar window
-		HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
-		// attach menu
-		m_CmdBar.AttachMenu(GetMenu());
-		// load command bar images
-		m_CmdBar.LoadImages(IDR_MAINFRAME);
-		// remove old menu
-		SetMenu(NULL);
+    return FALSE;
+  }
 
-		HWND hWndToolBar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE);
+  BEGIN_UPDATE_UI_MAP(CMainFrame)
+    UPDATE_ELEMENT(ID_MENUITEM_CHANGEVIEW, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
+  END_UPDATE_UI_MAP()
 
-		CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
-		AddSimpleReBarBand(hWndCmdBar);
-		AddSimpleReBarBand(hWndToolBar, NULL, TRUE);
+  BEGIN_MSG_MAP_EX(CMainFrame)
+    MSG_WM_CREATE(OnCreate)
+    MSG_WM_SIZE(OnSize)
+    COMMAND_CODE_HANDLER_EX(LBN_SELCHANGE, OnListSelChange)
+    COMMAND_ID_HANDLER_EX(ID_MENUITEM_CHANGEVIEW, OnMenuChangeView)
+    COMMAND_ID_HANDLER_EX(ID_APP_EXIT, OnFileExit)
+    CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
+    CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
+    END_MSG_MAP()
 
-		CreateSimpleStatusBar();
+  LRESULT OnCreate(LPCREATESTRUCT lpcs) {
+    // コマンドバーを作成
+    HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
 
-		m_hWndClient = m_view.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    // コマンドバーに現在のメニューバーのアイテムと画像をセット
+    m_CmdBar.AttachMenu(GetMenu());
+    m_CmdBar.LoadImages(IDR_MAINFRAME);
 
-		UIAddToolBar(hWndToolBar);
-		UISetCheck(ID_VIEW_TOOLBAR, 1);
-		UISetCheck(ID_VIEW_STATUS_BAR, 1);
+    // メニューバーを削除
+    SetMenu(NULL);
 
-		// register object for message filtering and idle updates
-		CMessageLoop* pLoop = _Module.GetMessageLoop();
-		ATLASSERT(pLoop != NULL);
-		pLoop->AddMessageFilter(this);
-		pLoop->AddIdleHandler(this);
+    // ツールバーを作成
+    HWND hWndToolBar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE);
 
-		return 0;
-	}
+    // リバーを作成
+    CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 
-	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
-	{
-		// unregister message filtering and idle updates
-		CMessageLoop* pLoop = _Module.GetMessageLoop();
-		ATLASSERT(pLoop != NULL);
-		pLoop->RemoveMessageFilter(this);
-		pLoop->RemoveIdleHandler(this);
+    // リバーのバンドにコマンドバーとツールバーを追加
+    AddSimpleReBarBand(hWndCmdBar);
+    AddSimpleReBarBand(hWndToolBar, NULL, TRUE);
 
-		bHandled = FALSE;
-		return 1;
-	}
+    // ステータスバーを作成
+    CreateSimpleStatusBar();
 
-	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{
-		PostMessage(WM_CLOSE);
-		return 0;
-	}
+    UIAddToolBar(hWndToolBar);
+    UIAddStatusBar(m_hWndStatusBar);
 
-	LRESULT OnFileNew(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{
-		// TODO: add code to initialize document
+    UISetCheck(ID_MENUITEM_CHANGEVIEW, 1);
 
-		return 0;
-	}
+    // スプリッタウィンドウを作成
+    m_wndSplitter.Create(m_hWnd, rcDefault, NULL,
+      WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 
-	LRESULT OnViewToolBar(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{
-		static BOOL bVisible = TRUE;	// initially visible
-		bVisible = !bVisible;
-		CReBarCtrl rebar = m_hWndToolBar;
-		int nBandIndex = rebar.IdToIndex(ATL_IDW_BAND_FIRST + 1);	// toolbar is 2nd added band
-		rebar.ShowBand(nBandIndex, bVisible);
-		UISetCheck(ID_VIEW_TOOLBAR, bVisible);
-		UpdateLayout();
-		return 0;
-	}
+    // スプリッタウィンドウ拡張スタイルを設定
+    m_wndSplitter.SetSplitterExtendedStyle(0);
 
-	LRESULT OnViewStatusBar(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{
-		BOOL bVisible = !::IsWindowVisible(m_hWndStatusBar);
-		::ShowWindow(m_hWndStatusBar, bVisible ? SW_SHOWNOACTIVATE : SW_HIDE);
-		UISetCheck(ID_VIEW_STATUS_BAR, bVisible);
-		UpdateLayout();
-		return 0;
-	}
+    // 左ペインのビューウィンドウを作成
+    m_viewFontList.Create(m_wndSplitter, rcDefault, NULL,
+      WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VSCROLL |
+      LBS_NOINTEGRALHEIGHT | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | LBS_SORT,
+      WS_EX_CLIENTEDGE);
 
-	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{
-		CAboutDlg dlg;
-		dlg.DoModal();
-		return 0;
-	}
+    m_wndSplitter.SetSplitterPane(SPLIT_PANE_LEFT, m_viewFontList);
+
+    // 右ペインのビューウィンドウを作成
+    m_viewFontPreview.Create(m_wndSplitter, rcDefault, NULL,
+      WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+      WS_EX_CLIENTEDGE);
+
+    m_wndSplitter.SetSplitterPane(SPLIT_PANE_RIGHT, m_viewFontPreview);
+
+    m_hWndClient = m_wndSplitter;
+    UpdateLayout();
+
+    // 分割バーの位置を設定
+    m_wndSplitter.SetSplitterPos(120);
+
+    // メッセージループにメッセージフィルタとアイドルハンドラを追加
+    CMessageLoop* pLoop = _Module.GetMessageLoop();
+    pLoop->AddMessageFilter(this);
+    pLoop->AddIdleHandler(this);
+
+    return 0;
+  }
+
+  void OnSize(UINT uType, CSize size) {
+    // ステータスバーにペインを設定
+    if (m_hWndStatusBar != NULL) {
+      CStatusBarCtrl bar = m_hWndStatusBar;
+
+      // フォント数を表示するペインの幅
+      int cxPosPane = 80;
+
+      // デフォルトペインの幅
+      CRect rcClient;
+      GetClientRect(rcClient);
+      int cxDefaultPane = rcClient.right - cxPosPane
+        - ::GetSystemMetrics(SM_CXVSCROLL) - ::GetSystemMetrics(SM_CXEDGE);
+
+      int nPanes[] = { cxDefaultPane, cxDefaultPane + cxPosPane };
+      bar.SetParts(sizeof(nPanes) / sizeof(nPanes[0]), nPanes);
+    }
+
+    // 基底クラスのWM_SIZEメッセージハンドラも呼び出すため
+    SetMsgHandled(false);
+  }
+
+  void OnListSelChange(UINT uNotifyCode, int nID, HWND hWndCtl) {
+    // 現在選択されているアイテムを取得
+    int nIndex = m_viewFontList.GetCurSel();
+    if (nIndex != LB_ERR) {
+      CString strText;
+      m_viewFontList.GetText(nIndex, strText);
+
+      // 取得した文字列を右ペインに設定
+      m_viewFontPreview.SetFontName(strText);
+    }
+  }
+
+  void OnMenuChangeView(UINT uNotifyCode, int nID, HWND hWndCtl) {
+    if (m_wndSplitter.GetSinglePaneMode() == SPLIT_PANE_RIGHT) {
+      m_wndSplitter.SetSinglePaneMode(SPLIT_PANE_NONE);    // 両ペイン表示
+      UISetCheck(ID_MENUITEM_CHANGEVIEW, 1);
+    }
+    else {
+      m_wndSplitter.SetSinglePaneMode(SPLIT_PANE_RIGHT);   // 右ペインのみ表示
+      UISetCheck(ID_MENUITEM_CHANGEVIEW, 0);
+    }
+  }
+
+  void OnFileExit(UINT uNotifyCode, int nID, HWND hWndCtl) {
+    PostMessage(WM_CLOSE);
+  }
 };
+
