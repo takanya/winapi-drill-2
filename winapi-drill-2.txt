@@ -9,16 +9,34 @@ https://codezine.jp/article/detail/223
 # ATL/WTLプログラミング 4：ダイアログリサイズ (1/2)|CodeZine（コードジン）
 https://codezine.jp/article/detail/262
   prj08-zine-resize
+  ボタン押下でリアルにウィンドウのサイズが変わるため注意
 # ATL/WTLプログラミング 5：スプリッタウィンドウ (1/3)|CodeZine（コードジン）
 https://codezine.jp/article/detail/346
   prj09-zine-splitter
   ビルドは通るが、実行時にエラーがでる、まじめに追っていかないと無理。
   とりあえず、サイトの内容をコードにコメントとして転記したい。
-# ATL/WTLプログラミング 6：ズームスクロールウィンドウ (1/3)|CodeZine（コードジン）
+
+  仕方がないので、prj09-zine-splitter-2を作ったが、リソースをいじると実行時エラーがでる。
+  リソースの何かが足りないっぽい。
+  次回は、バックアップしておいたリソースのテキストファイルと比較するところから。
+  実行時に限り、コマンドバーでイメージが原因でエラーが出るのは、rcファイルがおかしいから。
+  rcファイルをクリックしてUIから操作すると、正しいrcファイルになる。
+
+  # ATL/WTLプログラミング 6：ズームスクロールウィンドウ (1/3)|CodeZine（コードジン）
 https://codezine.jp/article/detail/392
   prj10-zine-zoom
   と思ったら、関係ありそう
 
+そういえば、DSWファイルをslnファイルに変換するOSSのツールがGithubにあった。
+しかも、上手く動作する
+
+■ WTL (Windows Template Library) の導入
+みんな、構成プロパティのVC++ディレクトリのインクルードディレクトリ、外部じゃないほうに、
+C:\dev\cpp\wtl\includeを追加する。
+
+プロパティで日本語にしても適用されるはresファイル、rcファイルは手動で2行書き換える
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
 
 # allenk/WTL-Wizard-VS2022: WTL (Windows Template for Visual Studio 2022)
 https://github.com/allenk/WTL-Wizard-VS2022

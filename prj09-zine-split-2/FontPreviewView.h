@@ -1,5 +1,11 @@
 #pragma once
 
+/*
+* スプリッタウィンドウの右ペインは、左ペインで選択されたフォントを表示します。
+* フォントプレビューペインは一般的なビューウィンドウです。
+* WM_PAINTメッセージハンドラでフォント名を描画しますが、そのフォント名はSetFontName()という
+* publicなメンバ関数を外部から呼び出すことによって設定します。
+*/
 class CFontPreviewView : public CWindowImpl<CFontPreviewView>
 {
   CString m_strFontName;

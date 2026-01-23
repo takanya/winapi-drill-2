@@ -1,5 +1,12 @@
 #pragma once
 
+/*
+* スプリッタウィンドウの左ペインは、システムにインストールされている
+* 利用可能なフォント名の一覧を表示します。
+* フォントリストペインは、リストボックスを基底クラスとしたビューウィンドウです。
+* WM_CREATEメッセージハンドラでEnumFontFamilies()を呼び出し、
+* システムで利用可能なTrueTypeフォント名だけをリストボックスに追加しています。
+*/
 class CFontListView : public CWindowImpl<CFontListView, CListBox>
 {
 public:

@@ -14,6 +14,13 @@ public:
   CFontListView m_viewFontList;        // 左ペイン
   CFontPreviewView m_viewFontPreview;  // 右ペイン
 
+  /*
+  * コマンドバー
+  * Internet Explorerのメニューバーのようなグリップが付いていて移動可能なバーのことです
+  * CommandBarCtrlを使うと、メニューリソースを用意するだけで
+  * 簡単にコマンドバーを作成することができます。
+  * また、画像リソースを用意すると、メニューアイテムに画像を関連付けることができます。
+  */
   CCommandBarCtrl m_CmdBar;
 
   virtual BOOL PreTranslateMessage(MSG* pMsg) {
@@ -44,6 +51,13 @@ public:
     UPDATE_ELEMENT(ID_MENUITEM_CHANGEVIEW, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
   END_UPDATE_UI_MAP()
 
+  /*
+  * CUpdateUIは、適切なタイミング（アイドル時やWM_INITMENUPOPUPメッセージが送られてきた時など）に
+  * ユーザーインターフェイス（UI）の状態を更新するための仕組みです
+  * 例えば、メニューアイテムにチェックマークを入れたり、ツールバーボタンを使用不可にするときなどに使用します。
+  * WTLはUI更新ハンドラを実現するためにCUpdateUIを用意しています。
+  */
+
   BEGIN_MSG_MAP_EX(CMainFrame)
     MSG_WM_CREATE(OnCreate)
     MSG_WM_SIZE(OnSize)
@@ -52,14 +66,27 @@ public:
     COMMAND_ID_HANDLER_EX(ID_APP_EXIT, OnFileExit)
     CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
     CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
-    END_MSG_MAP()
+  END_MSG_MAP()
 
   LRESULT OnCreate(LPCREATESTRUCT lpcs) {
     // コマンドバーを作成
+    // CMainFrameクラスのWM_CREATEメッセージハンドラでは、
+    // m_CmdBarに対してCreate()を呼び出すことでコマンドバーを作成します。
+    // Create()の第4引数にはコマンドバーのスタイルを指定します。
+    // ATL_SIMPLE_CMDBAR_PANE_STYLEはコマンドバーの標準的なスタイルを意味します。
     HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
 
     // コマンドバーに現在のメニューバーのアイテムと画像をセット
+    // コマンドバーを作成した後は、コマンドバーにメニューアイテムを追加します。
+    // 今回のプログラムはAttachMenu()を呼び出すことによってフレームウィンドウの
+    // メニューバーからメニューアイテムを読み込んでいますが、LoadMenu()を呼び出して
+    // メニューリソースから直接アイテムをロードすることもできます。
     m_CmdBar.AttachMenu(GetMenu());
+    // 次に、LoadImages()を呼び出すことによってツールバーの画像をロードしています。
+    // これにより、IDが等しいメニューアイテムとツールバーの画像が関連付けられ、
+    // メニューアイテムの横に画像が表示されるようになります。
+    // なお、メニューアイテムの横に画像を表示するためには、
+    // AddBitmap()やAddIcon()を使うこともできます。
     m_CmdBar.LoadImages(IDR_MAINFRAME);
 
     // メニューバーを削除
@@ -84,10 +111,22 @@ public:
     UISetCheck(ID_MENUITEM_CHANGEVIEW, 1);
 
     // スプリッタウィンドウを作成
+    // まず、CMainFrameクラスのメンバ変数としてスプリッタウィンドウクラスである
+    // CSplitterWindowのインスタンスであるm_wndSplitterを宣言します。
+    // さらに、各ペインのクラスであるCFontListViewとCFontPreviewViewの
+    // インスタンスもメンバ変数として宣言します。
+    // CMainFrameクラスのWM_CREATEメッセージハンドラでは、
+    // m_wndSplitterに対してCreate()を呼び出すことでスプリッタウィンドウを作成します。
     m_wndSplitter.Create(m_hWnd, rcDefault, NULL,
       WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 
     // スプリッタウィンドウ拡張スタイルを設定
+    // 次に、SetSplitterExtendedStyle()を呼び出してスプリッタウィンドウの
+    // 拡張スタイルを設定します。
+    // 今回のプログラムでは0を設定していますが、これは、スプリッタウィンドウの
+    // サイズが変更された場合に、左ペインの幅
+    // （水平分割スプリッタウィンドウの場合は上ペインの高さ）を固定することを意味します。
+    // スプリッタウィンドウ拡張スタイルには次のスタイルが指定できます。
     m_wndSplitter.SetSplitterExtendedStyle(0);
 
     // 左ペインのビューウィンドウを作成
@@ -96,6 +135,10 @@ public:
       LBS_NOINTEGRALHEIGHT | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | LBS_SORT,
       WS_EX_CLIENTEDGE);
 
+    // スプリッタウィンドウを作成した後は、スプリッタウィンドウを親として
+    // 各ペインのウィンドウを作成します。
+    // 各ペインはSetSplitterPane()を呼び出すことによってスプリッタウィンドウにセットされます。
+    // SetSplitterPane()の第1引数にはペインを識別するための次のようなフラグを指定します。
     m_wndSplitter.SetSplitterPane(SPLIT_PANE_LEFT, m_viewFontList);
 
     // 右ペインのビューウィンドウを作成
@@ -119,6 +162,19 @@ public:
     return 0;
   }
 
+  // 今回のプログラムは、ステータスバーの右端にフォント数を表示する領域（ペイン）
+  // を持ちます。
+  // この領域はフレームウィンドウのサイズが変わるたびに設定する必要があるため、
+  // CMainFrameクラスのWM_SIZEメッセージハンドラで設定します。
+  // WM_SIZEメッセージハンドラでは、ステータスバーに2つのペインを追加します。
+  // 1番目はフレームウィンドウの大きさに合わせて幅を調整するデフォルトペイン、
+  // 2番目はフォント数を表示するペインです。
+  // ペインを設定するにはSetParts()を呼び出します。
+  // 第1引数にはペインの数、第2引数にはペインの右端の座標を要素とする配列への
+  // ポインタを指定します。
+  // なお、WM_SIZEメッセージは基底クラスであるCFrameWindowImplクラス内でもマッピング
+  // されているため、最後にSetMsgHandled(false)を呼び出す必要があります。
+  // フォント数はOnIdle()内で取得してステータスバーに表示します。
   void OnSize(UINT uType, CSize size) {
     // ステータスバーにペインを設定
     if (m_hWndStatusBar != NULL) {
@@ -152,6 +208,8 @@ public:
       m_viewFontPreview.SetFontName(strText);
     }
   }
+
+
 
   void OnMenuChangeView(UINT uNotifyCode, int nID, HWND hWndCtl) {
     if (m_wndSplitter.GetSinglePaneMode() == SPLIT_PANE_RIGHT) {
